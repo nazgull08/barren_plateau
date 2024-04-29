@@ -1,6 +1,5 @@
-
-use actix_web::{web, App, HttpServer, HttpResponse};
 use actix_files as fs;
+use actix_web::{web, App, HttpResponse, HttpServer};
 use std::path::PathBuf;
 
 // Функция для обработки wasm файлов
@@ -32,4 +31,3 @@ async fn main() -> std::io::Result<()> {
     .run()
     .await
 }
-

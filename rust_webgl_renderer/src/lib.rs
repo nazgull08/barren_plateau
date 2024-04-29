@@ -1,6 +1,8 @@
 use wasm_bindgen::prelude::*;
-use web_sys::{console, js_sys::Float32Array, HtmlCanvasElement, WebGlProgram, WebGlRenderingContext, WebGlShader};
-
+use web_sys::{
+    console, js_sys::Float32Array, HtmlCanvasElement, WebGlProgram, WebGlRenderingContext,
+    WebGlShader,
+};
 
 // Вершинный шейдер
 const VERTEX_SHADER: &str = r#"
@@ -20,12 +22,10 @@ void main() {
 
 const VERTICES: &[f32] = &[
     -0.5, -0.5, // Нижний левый угол
-     0.5, -0.5, // Нижний правый угол
-    -0.5,  0.5, // Верхний левый угол
-     0.5,  0.5, // Верхний правый угол
+    0.5, -0.5, // Нижний правый угол
+    -0.5, 0.5, // Верхний левый угол
+    0.5, 0.5, // Верхний правый угол
 ];
-
-
 
 #[wasm_bindgen(start)]
 pub fn start() -> Result<(), JsValue> {
@@ -104,7 +104,9 @@ fn compile_shader(
     {
         Ok(shader)
     } else {
-        Err(context.get_shader_info_log(&shader).unwrap_or_else(|| String::from("Unknown error creating shader")))
+        Err(context
+            .get_shader_info_log(&shader)
+            .unwrap_or_else(|| String::from("Unknown error creating shader")))
     }
 }
 
@@ -129,6 +131,8 @@ fn create_program(
     {
         Ok(program)
     } else {
-        Err(context.get_program_info_log(&program).unwrap_or_else(|| String::from("Unknown error creating program")))
+        Err(context
+            .get_program_info_log(&program)
+            .unwrap_or_else(|| String::from("Unknown error creating program")))
     }
 }
