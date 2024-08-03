@@ -1,0 +1,12 @@
+{
+  "name": "vaporization",
+  "version": "0.1.0",
+  "files": [
+    "vaporization_bg.wasm",
+    "vaporization.js",
+    "vaporization.d.ts"
+  ],
+  "module": "vaporization.js",
+  "types": "vaporization.d.ts",
+  "sideEffects": false
+}

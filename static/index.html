@@ -17,6 +17,7 @@
             position: absolute;
             top: 0;
             left: 0;
+            cursor: none; 
         }
         #loading {
             position: absolute;
@@ -54,20 +55,43 @@
         import init, { run_app } from './pkg/vaporization.js';
 
         async function run() {
-            await init(); // Загружаем WASM-модуль
-            run_app(); // Запускаем приложение, которое должно создать канвас
+            await init();
+            run_app();
 
             const observer = new MutationObserver(mutations => {
                 mutations.forEach(mutation => {
                     mutation.addedNodes.forEach(node => {
                         if (node.nodeName === 'CANVAS') {
-                            resizeCanvas(node); // Настроить размер сразу после добавления
-                            observer.disconnect(); // Отключаем наблюдатель после настройки
-                            document.getElementById('loading').style.display = 'none'; // Скрываем полосу загрузки
+                            node.requestPointerLock = node.requestPointerLock || node.mozRequestPointerLock;
+                            node.onclick = function() {
+                                node.requestPointerLock();
+                            };
+                            resizeCanvas(node);
+                            observer.disconnect();
+                            document.getElementById('loading').style.display = 'none';
                         }
                     });
                 });
             });
+
+            document.addEventListener('pointerlockchange', lockChangeAlert, false);
+            document.addEventListener('mozpointerlockchange', lockChangeAlert, false);
+
+            function lockChangeAlert() {
+                if (document.pointerLockElement === canvas ||
+                    document.mozPointerLockElement === canvas) {
+                    console.log('The pointer lock status is now locked');
+                    document.addEventListener("mousemove", updatePosition, false);
+                } else {
+                    console.log('The pointer lock status is now unlocked');   
+                    document.removeEventListener("mousemove", updatePosition, false);
+                }
+            }
+
+            function updatePosition(e) {
+                // Тут можно обновить позицию камеры в твоем Rust коде, используя e.movementX и e.movementY
+            }
+
             observer.observe(document.body, { childList: true });
         }
 
